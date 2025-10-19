@@ -19,6 +19,10 @@ const fileSchema = mongoose.Schema({
     enum: ["folder", "file"],
     required: true,
   },
+  content: {
+    type: String,
+    default: "",
+  },
   s3Key: String, //only for files
   language: String,
   sizeInBytes: Number,

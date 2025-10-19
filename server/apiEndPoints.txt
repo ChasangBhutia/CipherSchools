@@ -1,10 +1,10 @@
 /api/users  POST   -- done
 /api/users/login    POST   -- done
-/api/projects POST
-/api/projects/:userId   GET
-/api/projects/:id   GET
+/api/projects POST   -- done
+/api/projects/:userId   GET   -- done
+/api/projects/:id   GET  -- done
 /api/projects/:id   PUT
-/api/projects/:id   DELETE
+/api/projects/:id   DELETE -- done
 /api/files  POST
 /api/files/:id  GET
 /api/files/:id  PUT
