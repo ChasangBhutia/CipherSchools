@@ -1,0 +1,69 @@
+# Server
+# Node modules
+server/node_modules/
+server/**/node_modules/
+
+# Environment files
+server/.env
+server/.env.local
+server/.env.*.local
+
+# Logs
+server/logs/
+server/**/*.log
+
+# Build output
+server/dist/
+server/build/
+
+# Temporary files
+server/tmp/
+server/temp/
+
+#Client
+# Node modules
+client/node_modules/
+client/**/node_modules/
+
+# Environment files
+client/.env
+client/.env.local
+client/.env.*.local
+
+# Build output
+client/build/
+client/dist/
+
+# Temporary files
+client/.cache/
+client/temp/
+
+# Logs
+client/**/*.log
+
+
+# IDE / OS specific
+
+# VSCode
+.vscode/
+.vscode/**
+
+# JetBrains IDEs
+.idea/
+*.iml
+
+# Mac OS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# NPM/Yarn logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Swap / backup files
+*.swp
+*.swo
+*.bak
