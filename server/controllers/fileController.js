@@ -68,6 +68,17 @@ module.exports.createFileOrFolder = async (req, res) => {
   }
 };
 
+module.exports.getFilesOrFolders = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const files = await fileModel.find({ projectId: id });
+    return res.success(200, "Files and folders found", { files });
+  } catch (err) {
+    console.error(err.message);
+    return res.error(400, "INTERNAL_ERROR", "Something went wrong");
+  }
+};
+
 module.exports.getFileOrFolder = async (req, res) => {
   const { id } = req.params;
   try {

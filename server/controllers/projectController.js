@@ -66,8 +66,9 @@ module.exports.getProject = async (req, res) => {
 
   try {
     const project = await projectModel.findById(id);
+    const files = await fileModel.find({ projectId: id });
     if (!project) return res.error(404, "NOT_FOUND", "Project not found");
-    return res.success(200, "Project found", { project });
+    return res.success(200, "Project found", { project, files });
   } catch (err) {
     console.error(err.message);
     return res.error(500, "INTERNAL_ERROR", "Something went wrong");

@@ -1,6 +1,7 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
+const cors = require("cors");
 const connectDb = require("./config/db");
 const authRoute = require("./routes/authRoute");
 const projectRoute = require("./routes/projectRoute");
@@ -10,14 +11,20 @@ const isLoggedIn = require("./middlewares/isLoggedIn");
 
 const app = express();
 
+connectDb();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(responseMiddleware);
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 const PORT = process.env.PORT || 3000;
-
-connectDb();
 
 app.use("/api/users", authRoute);
 app.use("/api/projects", isLoggedIn, projectRoute);
