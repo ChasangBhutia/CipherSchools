@@ -1,8 +1,12 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FaCode, FaBolt, FaCloud, FaLock } from "react-icons/fa";
+import { useAuthContext } from "../context/AuthContext";
 
 export default function Home() {
+  const { user } = useAuthContext();
+  const projectId = localStorage.getItem("projectId");
+
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-between overflow-hidden">
       {/* Navbar */}
@@ -13,7 +17,7 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text"
         >
-          CipherStudio
+          <a href="/">CipherStudio</a>
         </motion.h1>
 
         <div className="flex gap-4">
@@ -21,13 +25,13 @@ export default function Home() {
             to="/login"
             className="px-4 py-2 border border-slate-700 rounded-lg hover:bg-slate-800 transition"
           >
-            Login
+            {user.firstName ? user.firstName : "Login"}
           </Link>
           <Link
-            to="/register"
+            to="/dashboard"
             className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg hover:opacity-90 transition"
           >
-            Get Started
+            Dashboard
           </Link>
         </div>
       </nav>
@@ -60,25 +64,19 @@ export default function Home() {
           className="flex flex-wrap justify-center gap-4"
         >
           <Link
-            to="/register"
+            to={
+              projectId === "" || projectId === ""
+                ? "/dashboard"
+                : `/projects/${projectId}`
+            }
             className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl font-semibold hover:scale-105 transition-transform"
           >
             Start Building
           </Link>
-          <a
-            href="#features"
-            className="px-6 py-3 border border-slate-700 rounded-xl font-semibold hover:bg-slate-800 transition"
-          >
-            Learn More
-          </a>
         </motion.div>
       </main>
 
-      {/* Features Section */}
-      <section
-        id="features"
-        className="grid md:grid-cols-4 gap-6 px-8 py-16 w-full max-w-6xl text-center"
-      >
+      <section className="grid md:grid-cols-4 gap-6 px-8 py-16 w-full max-w-6xl text-center">
         {[
           {
             icon: <FaCode />,
@@ -117,8 +115,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="w-full border-t border-slate-800 py-6 text-center text-slate-500 text-sm">
-        Built with 💙 using React, Tailwind & Framer Motion — ©{" "}
-        {new Date().getFullYear()} CipherStudio
+        A React based IDE — © {new Date().getFullYear()} CipherStudio
       </footer>
     </div>
   );

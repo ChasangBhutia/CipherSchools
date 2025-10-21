@@ -121,3 +121,18 @@ module.exports.logout = (req, res) => {
 
   return res.success(200, "Logged out successfully");
 };
+
+module.exports.getUser = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user.id);
+    if (!user) return res.error(404, "NOT_FOUND", "User not found");
+    return res.success(200, "User found", {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+    });
+  } catch (err) {
+    console.error(err.message);
+    return res.error(500, "INTERNAL_ERROR", "Something went wrong");
+  }
+};

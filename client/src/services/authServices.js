@@ -11,3 +11,7 @@ export const login = (userData) => {
 export const logout = () => {
   return api.post("/users/logout");
 };
+
+export const getUser = () => {
+  return api.get("/users/");
+};

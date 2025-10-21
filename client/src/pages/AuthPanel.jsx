@@ -435,7 +435,7 @@ export default function AuthPanel() {
         animate={{ opacity: 1, transition: { delay: 0.5 } }}
         className="fixed bottom-6 left-1/2 -translate-x-1/2 text-slate-400 text-sm"
       >
-        Built with ❤️ for your React IDE
+        @CipherStudio - A React Based IDE
       </motion.div>
     </div>
   );

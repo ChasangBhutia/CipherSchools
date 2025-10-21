@@ -1,4 +1,5 @@
 const fileModel = require("../models/fileModel");
+const projectModel = require("../models/projectModel");
 
 module.exports.createFileOrFolder = async (req, res) => {
   const { projectId, name, type, parentId, language } = req.body;
@@ -44,6 +45,7 @@ module.exports.createFileOrFolder = async (req, res) => {
             : "Folder already exist with this name."
         }`
       );
+
     const newItem = await fileModel.create({
       projectId,
       parentId: parentId || null, // null if top-level
@@ -116,6 +118,11 @@ module.exports.updateFileOrFolder = async (req, res) => {
     });
     if (!updatedFile)
       return res.error(404, "NOT_FOUND", "File or folder not found");
+
+    const project = await projectModel.findById(updatedFile.projectId);
+    project.updatedAt = new Date();
+    await project.save();
+
     return res.success(
       200,
       `${updatedFile.type === "file" ? "File" : "Folder"} updated`,

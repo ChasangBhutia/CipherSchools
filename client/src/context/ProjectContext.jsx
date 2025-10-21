@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import {
   createProject,
+  deleteUserProject,
   getProjectById,
   getProjects,
 } from "../services/projectServices";
@@ -57,9 +58,22 @@ export const ProjectProvider = ({ children }) => {
     }
   };
 
+  const deleteProject = async (projectId) => {
+    try {
+      const response = await deleteUserProject(projectId);
+      if (response.data.success) {
+        setRefresh(refresh + 1);
+        alert(response.data.message);
+      }
+    } catch (err) {
+      console.error(`Error deleting project: ${err.message}`);
+    }
+  };
+
   return (
     <ProjectContext.Provider
       value={{
+        deleteProject,
         createNewProject,
         projects,
         fetchProject,

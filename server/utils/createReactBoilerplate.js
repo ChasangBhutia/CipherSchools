@@ -101,7 +101,14 @@ root.render(<App />);`,
     name: "style.css",
     type: "file",
     language: "css",
-    content: `body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-.app { padding: 2rem; text-align: center; }`,
+    content: `body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+.app {
+  padding: 2rem;
+  text-align: center; 
+}`,
   });
 };

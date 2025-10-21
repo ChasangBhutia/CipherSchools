@@ -3,21 +3,42 @@ import { useParams } from "react-router-dom";
 import { useProjectContext } from "../context/ProjectContext";
 import Sidebar from "../components/Sidebar";
 import EditorPane from "../components/Editor";
-import SaveToolbar from "../components/SaveToolbar";
 import Navbar from "../components/Navbar";
-import Preview from "../components/LivePreview";
 
 // Convert flat file list → hierarchical tree
 const buildFileTree = (files) => {
   const map = {};
   const roots = [];
+
   files.forEach((f) => (map[f._id] = { ...f, children: [] }));
   files.forEach((f) => {
-    if (f.parentId && map[f.parentId])
+    if (f.parentId && map[f.parentId]) {
       map[f.parentId].children.push(map[f._id]);
-    else roots.push(map[f._id]);
+    } else {
+      roots.push(map[f._id]);
+    }
   });
+
   return roots;
+};
+
+// Recursive function to convert file tree → Sandpack files with relative paths
+const buildSandpackFiles = (nodes, currentPath = "") => {
+  let files = {};
+
+  nodes.forEach((node) => {
+    const path = currentPath ? `${currentPath}/${node.name}` : `/${node.name}`;
+
+    if (node.type === "file") {
+      files[path] = node.content || "";
+    }
+
+    if (node.type === "folder" && node.children?.length > 0) {
+      files = { ...files, ...buildSandpackFiles(node.children, path) };
+    }
+  });
+
+  return files;
 };
 
 export default function ProjectEditor() {
@@ -30,6 +51,7 @@ export default function ProjectEditor() {
   const [newFileName, setNewFileName] = useState("");
   const [isPreview, setIsPreview] = useState(false);
   const [sandpackFiles, setSandpackFiles] = useState({});
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // responsive sidebar
 
   useEffect(() => {
     if (projectId) fetchProject(projectId);
@@ -37,15 +59,12 @@ export default function ProjectEditor() {
 
   const openFile = (file) => {
     setSelectedFile(file);
-    if (file.type === "file") {
-      setEditorContent(file.content || "");
-    }
+    if (file.type === "file") setEditorContent(file.content || "");
   };
 
   const saveFile = async () => {
     if (!selectedFile) return;
     try {
-      // Backend API call to save
       await fetch(`/api/files/${selectedFile._id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -77,27 +96,18 @@ export default function ProjectEditor() {
   };
 
   const handleRun = () => {
-    const filesObj = {};
+    const fileTree = buildFileTree(projectFiles || []);
+    let filesObj = buildSandpackFiles(fileTree);
 
-    projectFiles.forEach((f) => {
-      if (f.type === "file") filesObj[`/${f.name}`] = f.content || "";
-    });
+    const appFilePath =
+      Object.keys(filesObj).find((f) => f.endsWith("App.jsx")) || "/App.jsx";
 
-    // Ensure /index.js exists
-    if (!filesObj["/index.js"]) {
-      filesObj["/index.js"] =
-        'import React from "react"; import { createRoot } from "react-dom/client"; import App from "./App.jsx"; createRoot(document.getElementById("root")).render(<App />);';
-    }
-
-    // Ensure /App.jsx exists
-    if (!filesObj["/App.jsx"]) {
-      const firstJsx =
-        Object.keys(filesObj).find((name) => name.endsWith(".jsx")) ||
-        "/App.jsx";
-      if (!filesObj[firstJsx])
-        filesObj["/App.jsx"] =
-          "export default function App() { return <div>Hello World</div> }";
-    }
+    filesObj["/index.js"] = `
+      import React from "react";
+      import { createRoot } from "react-dom/client";
+      import App from "${appFilePath}";
+      createRoot(document.getElementById("root")).render(<App />);
+    `;
 
     setSandpackFiles(filesObj);
     setIsPreview(true);
@@ -111,38 +121,51 @@ export default function ProjectEditor() {
 
   return (
     <div className="flex flex-col h-screen bg-slate-900 text-white">
+      {/* Navbar */}
       <Navbar
         projectName={project?.name || "Untitled Project"}
         onRun={isPreview ? handleStop : handleRun}
         onSave={handleSave}
         onDeploy={handleDeploy}
         isPreview={isPreview}
+        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
       />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
         <Sidebar
           project={project}
-          loading={loading}
           fileTree={fileTree}
           newFileName={newFileName}
           setNewFileName={setNewFileName}
           creating={creating}
-          createFileAtRoot={createFileAtRoot}
           openFile={openFile}
+          createFileInFolder={createFileAtRoot}
+          deleteFile={() => {}}
+          renameFile={() => {}}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
         />
 
-        {isPreview ? (
-          <Preview files={sandpackFiles} />
-        ) : (
-          <div className="flex-1 flex flex-col">
-            <EditorPane
-              projectId={projectId}
-              selectedFile={selectedFile}
-              editorContent={editorContent}
-              setEditorContent={setEditorContent}
-            />
-          </div>
-        )}
+        <div className="flex-1 flex flex-col">
+          <EditorPane
+            files={sandpackFiles}
+            projectId={projectId}
+            selectedFile={selectedFile}
+            editorContent={editorContent}
+            setEditorContent={setEditorContent}
+            projectName={project?.name || "Untitled Project"}
+            onRun={isPreview ? handleStop : handleRun}
+            onSave={handleSave}
+            isPreview={isPreview}
+          />
+        </div>
       </div>
     </div>
   );

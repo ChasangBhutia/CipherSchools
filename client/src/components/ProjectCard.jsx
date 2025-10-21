@@ -2,9 +2,11 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FaTrash, FaFolderOpen } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useProjectContext } from "../context/ProjectContext";
 
-const ProjectCard = ({ id, name, updatedAt }) => {
+const ProjectCard = ({ id, name, updatedAt, createdAt }) => {
   const navigate = useNavigate();
+  const { deleteProject } = useProjectContext();
 
   const cardVariant = {
     hidden: { opacity: 0, y: 10 },
@@ -13,7 +15,14 @@ const ProjectCard = ({ id, name, updatedAt }) => {
   };
 
   const openProject = (projectId) => {
+    localStorage.setItem("projectId", projectId);
     navigate(`/projects/${projectId}`);
+  };
+
+  const handleDelete = (projectId) => {
+    if (localStorage.getItem("projectId") === projectId)
+      localStorage.setItem("projectId", "");
+    deleteProject(projectId);
   };
 
   return (
@@ -27,6 +36,9 @@ const ProjectCard = ({ id, name, updatedAt }) => {
       <div>
         <h2 className="text-xl font-bold text-white mb-2">{name}</h2>
         <p className="text-sm text-slate-300">
+          Created At: {new Date(createdAt).toLocaleString()}
+        </p>
+        <p className="text-sm text-slate-300">
           Last updated: {new Date(updatedAt).toLocaleString()}
         </p>
       </div>
@@ -38,7 +50,7 @@ const ProjectCard = ({ id, name, updatedAt }) => {
           <FaFolderOpen /> Open
         </button>
         <button
-          onClick={() => deleteProject(id)}
+          onClick={() => handleDelete(id)}
           className="px-3 py-1 rounded-lg bg-red-600/80 text-white flex items-center gap-2 hover:bg-red-600 transition"
         >
           <FaTrash /> Delete

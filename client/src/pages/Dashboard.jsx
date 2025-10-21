@@ -3,8 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaPlus } from "react-icons/fa";
 import { useProjectContext } from "../context/ProjectContext";
 import ProjectCard from "../components/ProjectCard";
+import { useAuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
   const { createNewProject, projects, loading } = useProjectContext();
   const [newProjectName, setNewProjectName] = useState("");
   const [creating, setCreating] = useState(false);
@@ -13,6 +17,12 @@ export default function Dashboard() {
     if (!newProjectName) return;
     setCreating(true);
     createNewProject(newProjectName);
+  };
+
+  const cardVariant = {
+    hidden: { opacity: 0, y: 10 },
+    enter: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
+    exit: { opacity: 0, y: -10, transition: { duration: 0.2, ease: "easeIn" } },
   };
 
   return (
@@ -41,6 +51,12 @@ export default function Dashboard() {
             >
               <FaPlus /> {creating ? "Creating..." : "Create"}
             </button>
+            <button
+              onClick={() => navigate("/")}
+              className="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-800 text-white font-semibold flex items-center gap-2"
+            >
+              Home
+            </button>
           </div>
         </div>
 
@@ -65,6 +81,7 @@ export default function Dashboard() {
                   key={project._id}
                   id={project._id}
                   name={project.name}
+                  createdAt={project.createdAt}
                   updatedAt={project.updatedAt}
                 />
               ))}
