@@ -1,6 +1,6 @@
-# ReactIDE
+# CipherStudio
 
-**ReactIDE** is a browser-based React development environment that allows users to create, edit, and preview React components live in the browser. It simulates a real IDE experience with live preview, file management, and project persistence.
+**CipherStudio** is a browser-based React development environment that allows users to create, edit, and preview React components live in the browser. It simulates a real IDE experience with live preview, file management, and project persistence.
 
 **Live url:** https://cipherstudio-omega.vercel.app/
 
