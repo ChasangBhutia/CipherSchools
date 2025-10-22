@@ -4,8 +4,14 @@ export const getFiles = (projectId) => {
   return api.get(`/files/${projectId}`);
 };
 
-export const saveFile = (fileId, content, name) => {
-  return api.put(`/files/${fileId}`, name === "" ? { content } : { name });
+export const saveFile = (fileId, content) => {
+  console.log(content);
+
+  return api.put(`/files/${fileId}`, { content });
+};
+
+export const rename = (fileId, name) => {
+  return api.put(`/files/${fileId}`, { name });
 };
 
 export const createFileOrFolder = (data) => {

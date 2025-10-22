@@ -76,25 +76,6 @@ export default function ProjectEditor() {
     }
   };
 
-  const createFileAtRoot = async (type = "file") => {
-    if (!newFileName) return;
-    setCreating(true);
-    try {
-      const res = await fetch(`/api/projects/${projectId}/files`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newFileName, type, parentId: null }),
-      });
-      const newFile = await res.json();
-      projectFiles.push(newFile.item);
-      setNewFileName("");
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setCreating(false);
-    }
-  };
-
   const handleRun = () => {
     const fileTree = buildFileTree(projectFiles || []);
     let filesObj = buildSandpackFiles(fileTree);
@@ -146,7 +127,6 @@ export default function ProjectEditor() {
           setNewFileName={setNewFileName}
           creating={creating}
           openFile={openFile}
-          createFileInFolder={createFileAtRoot}
           deleteFile={() => {}}
           renameFile={() => {}}
           isOpen={isSidebarOpen}

@@ -5,6 +5,10 @@ import {
   SandpackPreview,
 } from "@codesandbox/sandpack-react";
 
+/**
+ * @param {Object} props
+ * @param {Object} props.files}
+ */
 export default function LivePreview({ files }) {
   return (
     <div className="flex-1 h-full">
@@ -24,7 +28,7 @@ export default function LivePreview({ files }) {
       >
         <SandpackLayout>
           <SandpackPreview
-            style={{ height: "89vh", width: "100%", borderRadius: "8px" }}
+            style={{ height: "84vh", width: "100%", borderRadius: "8px" }}
           />
         </SandpackLayout>
       </SandpackProvider>

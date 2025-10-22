@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 import {
   createFileOrFolder,
   deleteFile,
+  rename,
   saveFile,
 } from "../services/fileServices";
 import { useProjectContext } from "./ProjectContext";
@@ -12,10 +13,10 @@ export const FileProvider = ({ children }) => {
   const { fetchProject } = useProjectContext();
   const [fileSaving, setFileSaving] = useState(false);
 
-  const updateFile = async (projectId, name = "", fileId, content) => {
+  const updateFile = async (projectId, fileId, content) => {
     try {
       setFileSaving(true);
-      const response = await saveFile(fileId, content, name);
+      const response = await saveFile(fileId, content);
       if (response.data.success) {
         await fetchProject(projectId);
       }
@@ -23,6 +24,17 @@ export const FileProvider = ({ children }) => {
       console.error(err.message);
     } finally {
       setFileSaving(false);
+    }
+  };
+
+  const renameFile = async (projectId, fileId, name) => {
+    try {
+      const response = await rename(fileId, name);
+      if (response.data.success) {
+        await fetchProject(projectId);
+      }
+    } catch (err) {
+      console.error(`Error renaming file: ${err.message}`);
     }
   };
 
@@ -51,6 +63,7 @@ export const FileProvider = ({ children }) => {
   return (
     <FileContext.Provider
       value={{
+        renameFile,
         deleteFileOrFolder,
         createNewFileOrFolder,
         setFileSaving,

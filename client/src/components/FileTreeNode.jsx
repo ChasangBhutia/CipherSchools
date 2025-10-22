@@ -37,14 +37,8 @@ const getFileIcon = (fileName) => {
   }
 };
 
-const FileTreeNode = ({
-  node,
-  projectId,
-  openFile,
-  createFileOrFolder,
-  renameFile,
-}) => {
-  const { updateFile, deleteFileOrFolder, createNewFileOrFolder } =
+const FileTreeNode = ({ node, projectId, openFile, createFileOrFolder }) => {
+  const { renameFile, updateFile, deleteFileOrFolder, createNewFileOrFolder } =
     useFileContext();
   const [expanded, setExpanded] = useState(true);
   const [showPrompt, setShowPrompt] = useState(false);
@@ -94,7 +88,7 @@ const FileTreeNode = ({
 
   const handleSubmitRename = (newName) => {
     if (!node?._id) return;
-    updateFile(projectId, newName, node._id, node.content || "");
+    renameFile(projectId, node._id, newName);
     setShowRenamePrompt(false);
   };
 

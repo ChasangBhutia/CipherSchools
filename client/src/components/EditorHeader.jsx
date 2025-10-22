@@ -1,6 +1,6 @@
 // src/components/EditorHeader.jsx
 import React from "react";
-import { Play, Square, Save, Menu } from "lucide-react";
+import { Play, Square, Save } from "lucide-react";
 
 const EditorHeader = ({
   selectedFile,

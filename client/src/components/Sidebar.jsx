@@ -13,7 +13,6 @@ const Sidebar = ({
   creating,
   openFile,
   deleteFile,
-  createFileInFolder,
   renameFile,
   isOpen,
   onClose,
@@ -78,12 +77,10 @@ const Sidebar = ({
           </button>
         </div>
 
-        {/* Project name for large screens */}
         <h2 className="text-xl font-bold mb-4 hidden lg:block">
           {project?.name || "Project"}
         </h2>
 
-        {/* New file/folder input */}
         <div className="flex gap-2 mb-4">
           <input
             type="text"
@@ -108,7 +105,6 @@ const Sidebar = ({
           </button>
         </div>
 
-        {/* File tree */}
         <AnimatePresence>
           <ul className="flex-1 overflow-auto">
             {fileTree.map((node) => (
@@ -118,7 +114,6 @@ const Sidebar = ({
                 node={node}
                 openFile={openFile}
                 deleteFile={deleteFile}
-                createFile={createFileInFolder}
                 renameFile={renameFile}
               />
             ))}
