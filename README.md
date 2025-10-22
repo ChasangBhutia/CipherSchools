@@ -84,21 +84,24 @@ node index.js
 
 ## Folder Structure
 
+```bash
 CipherSchools/
-├─ client/  
+├─ client/
 │ ├─ src/
 │ ├─ public/
 │ ├─ package.json
-├─ server/  
+├─ server/
 │ ├─ routes/
 │ ├─ controllers/
 │ ├─ models/
 │ ├─ index.js
 │ ├─ package.json
 ├─ README.md
+```
 
 ## Architecture Overview
 
+```bash
 +---------------------+
 | ReactIDE UI | <- Frontend (React + Tailwind)
 +---------+-----------+
@@ -117,6 +120,7 @@ v
 +---------------------+
 | MongoDB DB | <- Stores projects, user data
 +---------------------+
+```
 
 - **Frontend** handles the editor, file management, and live preview.
 - **Axios/API layer** connects frontend to backend.
